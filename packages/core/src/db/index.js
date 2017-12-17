@@ -49,7 +49,9 @@ function addToSublevel(sub: null | string | Array<string>, value: Object) {
     ...database,
     subs: {
       ...database.subs,
-      [subname]: [value, ...db].sort((a, b) => (b.key > a.key ? -1 : 1))
+      [subname]: [value, ...db.filter(item => item.key !== value.key)].sort(
+        (a, b) => (b.key > a.key ? -1 : 1)
+      )
     }
   };
 }

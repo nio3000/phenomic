@@ -6,101 +6,101 @@ describe("db", () => {
     jest.resetModuleRegistry();
   });
 
-  let i = 0;
-
   it("should be able to put & get a value", () => {
     return db
-      .put("foo", "bar", { data: { title: "bar" } })
-      .then(() => db.get("foo", "bar"))
+      .put("collection-1", "bar", { data: { title: "bar" } })
+      .then(() => db.get("collection-1", "bar"))
       .then(value => expect(value).toMatchSnapshot());
   });
 
   it("should be able to get a list", () => {
-    i++;
     return Promise.all([
-      db.put("bar" + i, "baz", { data: { title: "baz" } }),
-      db.put("bar" + i, "foo", { data: { title: "foo" } })
+      db.put("test-list", "baz", { data: { title: "baz" } }),
+      db.put("test-list", "foo", { data: { title: "foo" } })
     ])
-      .then(() => db.getList("bar" + i, {}, "default", ""))
+      .then(() => db.getList("test-list", {}, "default", ""))
       .then(value => expect(value).toMatchSnapshot());
   });
 
   it("should be able to get a reversed list", () => {
-    i++;
     return Promise.all([
-      db.put("bar" + i, "baz", { data: { title: "baz" } }),
-      db.put("bar" + i, "foo", { data: { title: "foo" } })
+      db.put("test-reversed-list", "baz", { data: { title: "baz" } }),
+      db.put("test-reversed-list", "foo", { data: { title: "foo" } })
     ])
-      .then(() => db.getList("bar" + i, { reverse: true }, "default", ""))
+      .then(() =>
+        db.getList("test-reversed-list", { reverse: true }, "default", "")
+      )
       .then(value => expect(value).toMatchSnapshot());
   });
 
   it("should be able to get a list after (starting) some value", () => {
-    i++;
     return Promise.all([
-      db.put("bar" + i, "baz", { data: { title: "baz" } }),
-      db.put("bar" + i, "eoo", { data: { title: "eoo" } }),
-      db.put("bar" + i, "foo", { data: { title: "foo" } })
+      db.put("test-gte-list", "baz", { data: { title: "baz" } }),
+      db.put("test-gte-list", "eoo", { data: { title: "eoo" } }),
+      db.put("test-gte-list", "foo", { data: { title: "foo" } })
     ])
-      .then(() => db.getList("bar" + i, { gte: "eoo" }, "default", ""))
+      .then(() => db.getList("test-gte-list", { gte: "eoo" }, "default", ""))
       .then(value => expect(value).toMatchSnapshot());
   });
 
   it("should be able to get a list after some value", () => {
-    i++;
     return Promise.all([
-      db.put("bar" + i, "baz", { data: { title: "baz" } }),
-      db.put("bar" + i, "eoo", { data: { title: "eoo" } }),
-      db.put("bar" + i, "foo", { data: { title: "foo" } })
+      db.put("test-gt-list", "baz", { data: { title: "baz" } }),
+      db.put("test-gt-list", "eoo", { data: { title: "eoo" } }),
+      db.put("test-gt-list", "foo", { data: { title: "foo" } })
     ])
-      .then(() => db.getList("bar" + i, { gt: "eoo" }, "default", ""))
+      .then(() => db.getList("test-gt-list", { gt: "eoo" }, "default", ""))
       .then(value => expect(value).toMatchSnapshot());
   });
 
   it("should be able to get a list before (starting) some value", () => {
-    i++;
     return Promise.all([
-      db.put("bar" + i, "baz", { data: { title: "baz" } }),
-      db.put("bar" + i, "eoo", { data: { title: "eoo" } }),
-      db.put("bar" + i, "foo", { data: { title: "foo" } })
+      db.put("test-lte-list", "baz", { data: { title: "baz" } }),
+      db.put("test-lte-list", "eoo", { data: { title: "eoo" } }),
+      db.put("test-lte-list", "foo", { data: { title: "foo" } })
     ])
-      .then(() => db.getList("bar" + i, { lte: "eoo" }, "default", ""))
+      .then(() => db.getList("test-lte-list", { lte: "eoo" }, "default", ""))
       .then(value => expect(value).toMatchSnapshot());
   });
 
   it("should be able to get a list before some value", () => {
-    i++;
     return Promise.all([
-      db.put("bar" + i, "baz", { data: { title: "baz" } }),
-      db.put("bar" + i, "eoo", { data: { title: "eoo" } }),
-      db.put("bar" + i, "foo", { data: { title: "foo" } })
+      db.put("test-lt-list", "baz", { data: { title: "baz" } }),
+      db.put("test-lt-list", "eoo", { data: { title: "eoo" } }),
+      db.put("test-lt-list", "foo", { data: { title: "foo" } })
     ])
-      .then(() => db.getList("bar" + i, { lt: "eoo" }, "default", ""))
+      .then(() => db.getList("test-lt-list", { lt: "eoo" }, "default", ""))
       .then(value => expect(value).toMatchSnapshot());
   });
 
   it("should be able to get a list with a limited count", () => {
-    i++;
     return Promise.all([
-      db.put("bar" + i, "baz", { data: { title: "baz" } }),
-      db.put("bar" + i, "foo", { data: { title: "foo" } })
+      db.put("test-limit-list", "baz", { data: { title: "baz" } }),
+      db.put("test-limit-list", "foo", { data: { title: "foo" } })
     ])
-      .then(() => db.getList("bar" + i, { limit: 1 }, "default", ""))
+      .then(() => db.getList("test-limit-list", { limit: 1 }, "default", ""))
       .then(value => expect(value).toMatchSnapshot());
   });
 
   it("should throw when value isn't there", () => {
-    return db.get("foo", "baz").catch(error => expect(error).toMatchSnapshot());
+    return db
+      .get("error", "baz")
+      .catch(error => expect(error).toMatchSnapshot());
   });
 
   it("should be able to get a list with a specific query", () => {
-    i++;
     return Promise.all([
-      db.put("bar" + i, "foo", { data: { title: "foo", tags: ["a", "b"] } }),
-      db.put("bar" + i, "bar", { data: { title: "bar", tags: ["a", "c"] } }),
-      db.put("bar" + i, "baz", { data: { title: "baz", tags: ["b", "c"] } })
+      db.put("test-query-list", "foo", {
+        data: { title: "foo", tags: ["a", "b"] }
+      }),
+      db.put("test-query-list", "bar", {
+        data: { title: "bar", tags: ["a", "c"] }
+      }),
+      db.put("test-query-list", "baz", {
+        data: { title: "baz", tags: ["b", "c"] }
+      })
     ])
-      .then(() => db.getList("bar" + i, {}, "tags", "a"))
+      .then(() => db.getList("test-query-list", {}, "tags", "a"))
       .then(value => expect(value).toMatchSnapshot());
   });
 });
